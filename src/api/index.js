@@ -1,6 +1,7 @@
 import Q from 'q';
 import axios from 'axios';
 
+axios.defaults.withCredentials = true
 export default (url, method = 'get', data) => {
     var deferred = Q.defer();
     axios({
@@ -9,29 +10,9 @@ export default (url, method = 'get', data) => {
         data: data,
         timeout: 30000
     }).then(res => {
-        if (res.data && res.data.success) {
-            deferred.resolve(res.data);
-        } else {
-            switch (res.data.code) {
-                case '000010':
-                    window.location.href = '/login.html';
-                    break;
-            }
-            deferred.reject(res.data);
-        }
+        deferred.resolve(res.data);
     }, err => {
-        if (err && err.response) {
-            switch (err.response.status) {
-                case 401:
-                    window.location.href = '/login.html';
-                    break;
-                default:
-                    deferred.reject(err);
-                    break;
-            }
-        } else {
-            deferred.reject(err);
-        }
+        deferred.reject(err);
     });
     return deferred.promise;
 };

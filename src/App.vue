@@ -6,16 +6,22 @@
 
 <script>
 export default {
-    name: 'app'
-}
+  name: "app"
+};
 </script>
 
-<style>
+<style lang="less">
+@import '~@/styles/_flex';
 body {
-  width: 800px;
-  min-height: 500px;
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  width: 500px;
+  min-height: 800px;
+  background-color: white;
+  font-family: "Avenir", Helvetica Neue, Tahoma, Arial, PingFangSC-Regular,
+    Hiragino Sans GB, Microsoft Yahei, sans-serif;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+  -ms-text-size-adjust: none;
+  font-size: 14px;
 }
 </style>
