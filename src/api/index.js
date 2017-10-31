@@ -1,7 +1,6 @@
 import Q from 'q';
 import axios from 'axios';
 
-axios.defaults.withCredentials = true
 export default (url, method = 'get', data) => {
     var deferred = Q.defer();
     axios({
@@ -10,7 +9,7 @@ export default (url, method = 'get', data) => {
         data: data,
         timeout: 30000
     }).then(res => {
-        deferred.resolve(res.data);
+        deferred.resolve(res);
     }, err => {
         deferred.reject(err);
     });

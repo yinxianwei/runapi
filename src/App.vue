@@ -14,7 +14,6 @@ export default {
 @import '~@/styles/_flex';
 body {
   width: 500px;
-  min-height: 800px;
   background-color: white;
   font-family: "Avenir", Helvetica Neue, Tahoma, Arial, PingFangSC-Regular,
     Hiragino Sans GB, Microsoft Yahei, sans-serif;

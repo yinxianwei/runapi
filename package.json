@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.17.0",
     "element-ui": "^2.0.1",
+    "jsoneditor": "^5.9.6",
     "q": "^1.5.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
