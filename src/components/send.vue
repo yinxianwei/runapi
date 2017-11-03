@@ -20,7 +20,7 @@
         </el-input>
         <a href="#" @click="changeParameterType(2)" v-show="inputType == 1">JSON</a>
         <a href="#" @click="changeParameterType(1)" v-show="inputType == 2">key value</a>
-        <p>cookies：</p>
+        <p>Headers：</p>
         <div v-for="(item, index) in cookies" :key="index" class="mb" layout="row" layout-align="start center">
             <div class="cp mr" @click="removeCookie(index)">
                 <i class="el-icon-delete"></i>
@@ -69,7 +69,8 @@ export default {
         var container = document.getElementById('jsoneditor');
         var options = {
             mode: 'code',
-            modes: ['code', 'form', 'text', 'tree', 'view']
+            modes: ['code', 'form', 'text', 'tree', 'view'],
+            onChange: this.changeJson
         };
         this.editor = new JSONEditor(container, options);
         if (process.env.NODE_ENV === 'development') {
@@ -109,6 +110,12 @@ export default {
         }
     },
     methods: {
+        changeJson() {
+            try {
+                this.response = this.editor.get();
+            } catch (error) {
+            }
+        },
         setItem() {
             if (process.env.NODE_ENV === 'development') {
                 localStorage.setItem('runapi_data', JSON.stringify(this.localData))
@@ -215,7 +222,7 @@ export default {
                 var item = list[i];
                 for (var key in item.value) {
                     var val = item.value[key];
-                    var type = val ? typeof val : ' ';
+                    var type = val == '' ? 'unknown' : typeof val;
                     if (val instanceof Array) {
                         type = 'array';
                     }
@@ -225,10 +232,12 @@ export default {
                         value: val
                     })
                     if (val instanceof Array && val.length) {
-                        temp.push({
-                            name: key,
-                            value: val[0]
-                        })
+                        if (typeof val[0] == 'object') {
+                            temp.push({
+                                name: key,
+                                value: val[0]
+                            })
+                        }
                     } else if (val instanceof Object) {
                         temp.push({
                             name: key,
@@ -246,7 +255,7 @@ export default {
                 if (item.value && item.value.length) {
                     markdown += `|参数名${formatType === 1 ? '| 必选' : ''}|类型|说明|\n|:----    ${formatType === 1 ? '|:---' : ''}|:----- |-----   |`
                     for (var val of item.value) {
-                        markdown += `\n| ${val.key} ${formatType === 1 ? '| 是' : ''} | ${val.type} | |`
+                        markdown += `\n| ${val.key} ${formatType === 1 ? '| 是' : ''} | ${val.type} | 无 |`
                     }
                 } else {
                     markdown += '无'
@@ -262,6 +271,10 @@ export default {
                 this.markdown = '';
                 return;
             }
+            if (!this.config.data) {
+                this.markdown = this.formatData([{ name: '参数说明', value: this.response }], '', 2);
+                return;
+            }
             this.editor.set(this.response);
 
             this.markdown = `
@@ -275,7 +288,7 @@ export default {
 
 **请求方式：**
 - ${this.method}
-${this.formatData([{ name: '参数说明', value: JSON.parse(this.config.data) }])}
+${this.formatData([{ name: '参数说明', value: this.config.data ? JSON.parse(this.config.data) : '' }])}
 
  **返回示例**
 
