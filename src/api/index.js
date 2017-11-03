@@ -1,17 +1,13 @@
 import Q from 'q';
 import axios from 'axios';
-
-export default (url, method = 'get', data) => {
-    var deferred = Q.defer();
-    axios({
+axios.defaults.withCredentials = true
+export default (url, method = 'get', data, headers) => {
+    return axios({
         method: method,
+        headers: headers,
         url: url,
         data: data,
-        timeout: 30000
-    }).then(res => {
-        deferred.resolve(res);
-    }, err => {
-        deferred.reject(err);
-    });
-    return deferred.promise;
+        timeout: 30000,
+        withCredentials: true
+    })
 };

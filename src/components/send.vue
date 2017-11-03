@@ -21,14 +21,14 @@
         <a href="#" @click="changeParameterType(2)" v-show="inputType == 1">JSON</a>
         <a href="#" @click="changeParameterType(1)" v-show="inputType == 2">key value</a>
         <p>Headers：</p>
-        <div v-for="(item, index) in cookies" :key="index" class="mb" layout="row" layout-align="start center">
-            <div class="cp mr" @click="removeCookie(index)">
+        <div v-for="(item, index) in headers" :key="index" class="mb" layout="row" layout-align="start center">
+            <div class="cp mr" @click="removeHeader(index)">
                 <i class="el-icon-delete"></i>
             </div>
             <el-input v-model="item.key" placeholder="key" class="mr" @input="setItem"></el-input>
             <el-input v-model="item.value" placeholder="value" class="mr" @input="setItem"></el-input>
         </div>
-        <a href="#" @click="addCookie" class="mb">添加一项</a>
+        <a href="#" @click="addHeader" class="mb">添加一项</a>
         <p>
             <div layout="row" class="mb">
                 <el-button class="mr" :type="resType == 1 ? 'primary' : ''" @click="changeType(1)">返回结果</el-button>
@@ -54,7 +54,7 @@ export default {
             method: 'GET',
             url: '',
             parameterList: [],
-            cookies: [],
+            headers: [],
             response: null,
             markdown: '',
             resType: 1,
@@ -79,7 +79,7 @@ export default {
                 this.method = data.method;
                 this.url = data.url;
                 this.parameterList = data.parameterList;
-                this.cookies = data.cookies;
+                this.headers = data.headers;
                 this.parameterJson = data.parameterJson;
                 this.inputType = data.inputType;
             }
@@ -90,7 +90,7 @@ export default {
                     this.method = data.method;
                     this.url = data.url;
                     this.parameterList = data.parameterList;
-                    this.cookies = data.cookies;
+                    this.headers = data.headers;
                     this.parameterJson = data.parameterJson;
                     this.inputType = data.inputType;
                 }
@@ -103,7 +103,7 @@ export default {
                 method: this.method,
                 url: this.url,
                 parameterList: this.parameterList,
-                cookies: this.cookies,
+                headers: this.headers,
                 parameterJson: this.parameterJson,
                 inputType: this.inputType
             }
@@ -136,15 +136,18 @@ export default {
             this.parameterList.splice(index, 1);
             this.setItem();
         },
-        addCookie() {
-            this.cookies.push({
+        addHeader() {
+            if (!this.headers) {
+                this.headers = [];
+            }
+            this.headers.push({
                 key: '',
                 value: ''
             });
             this.setItem();
         },
-        removeCookie(index) {
-            this.cookies.splice(index, 1);
+        removeHeader(index) {
+            this.headers.splice(index, 1);
             this.setItem();
         },
         changeParameterType(type) {
@@ -198,7 +201,14 @@ export default {
                 }
             });
             this.parameter = data;
-            api(this.url, this.method, this.parameter).then(res => {
+            var header = {};
+             this.headers.forEach(value => {
+                if (value.key) {
+                    header[value.key] = value.value;
+                }
+            });
+            console.log(header);
+            api(this.url, this.method, this.parameter, header).then(res => {
                 this.streamline(res.data.data);
                 this.response = res.data.data;
                 this.config = res.config;
