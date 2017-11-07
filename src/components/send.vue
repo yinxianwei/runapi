@@ -232,7 +232,7 @@ export default {
                 var item = list[i];
                 for (var key in item.value) {
                     var val = item.value[key];
-                    var type = val == '' ? 'unknown' : typeof val;
+                    var type = val == null ? 'unknown' : typeof val;
                     if (val instanceof Array) {
                         type = 'array';
                     }
