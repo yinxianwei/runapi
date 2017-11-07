@@ -18,8 +18,8 @@
         <a href="#" @click="addParameter" v-show="inputType == 1">添加一项</a>
         <el-input type="textarea" class="textarea2" placeholder="请输入内容" v-model="parameterJson" v-show="inputType == 2" @input="setItem">
         </el-input>
-        <a href="#" @click="changeParameterType(2)" v-show="inputType == 1">JSON</a>
-        <a href="#" @click="changeParameterType(1)" v-show="inputType == 2">key value</a>
+        <a href="#" @click="changeParameterType(2)" v-show="inputType == 1">Raw</a>
+        <a href="#" @click="changeParameterType(1)" v-show="inputType == 2">Key/Value</a>
         <p>Headers：</p>
         <div v-for="(item, index) in headers" :key="index" class="mb" layout="row" layout-align="start center">
             <div class="cp mr" @click="removeHeader(index)">
