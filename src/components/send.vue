@@ -209,8 +209,9 @@ export default {
             });
             console.log(header);
             api(this.url, this.method, this.parameter, header).then(res => {
-                this.streamline(res.data.data);
-                this.response = res.data.data;
+                console.log(res.data);
+                this.streamline(res.data);
+                this.response = res.data;
                 this.config = res.config;
                 this.dataFormat();
                 this.loading = false;
